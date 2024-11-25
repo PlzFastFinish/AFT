@@ -13,7 +13,6 @@ public class FirstTest extends BaseTest {
     browser.findElement(By.xpath("//input[@class='submit-button btn_action']")).click();
     String errorMessage = browser.findElement(By.xpath("//div[@class='error-message-container error']")).getText();
     assertEquals(errorMessage, "Epic sadface: Username and password do not match any user in this service");
-
   }
 
   @Test
