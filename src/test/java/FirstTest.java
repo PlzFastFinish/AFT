@@ -24,7 +24,6 @@ public class FirstTest extends BaseTest {
     browser.findElement(By.xpath("//input[@class='submit-button btn_action']")).click();
     boolean isPresent = browser.findElement(By.cssSelector(".title")).isDisplayed();
     assertTrue(isPresent, "Register button is not displayed");
-    browser.close();
   }
 
   @Test
@@ -35,6 +34,5 @@ public class FirstTest extends BaseTest {
     browser.findElement(By.name("login-button")).click();
     String errorMessage = browser.findElement(By.xpath("//div[@class='error-message-container error']")).getText();
     assertEquals(errorMessage, "Epic sadface: Sorry, this user has been locked out.");
-    browser.close();
   }
 }
