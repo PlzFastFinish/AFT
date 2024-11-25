@@ -1,48 +1,40 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class FirstTest {
+public class FirstTest extends BaseTest {
 
   @Test
-    public void zipCode4DigitsCheck() {
-      //. Открыть браузер
-      //. Зайти на сайт
-    ChromeOptions options = new ChromeOptions();
-    options.addArguments("start-Maximized");
-    options.addArguments("headless");
-    WebDriver browser = new ChromeDriver();
+    public void authorizationIsInvalid() {
+    browser.get("https://www.saucedemo.com");
+    browser.findElement (By.xpath("//input[@placeholder='Username']")).sendKeys("1234");
+    browser.findElement (By.xpath("//input[@placeholder='Password']")).sendKeys("12345");
+    browser.findElement(By.xpath("//input[@class='submit-button btn_action']")).click();
+    String errorMessage = browser.findElement(By.xpath("//div[@class='error-message-container error']")).getText();
+    assertEquals(errorMessage, "Epic sadface: Username and password do not match any user in this service");
 
-
-    browser.get("https://sharelane.com/cgi-bin/register.py");
-
-    browser.findElement (By.name("zip_code")).sendKeys("1234");
-    browser.findElement(By.xpath("//input[@value='Continue']")).click();
-    String errorMessage = browser.findElement(By.cssSelector("[class=error_message]")).getText();
-    assertEquals(errorMessage, "Oops, error on page. ZIP code should have 5 digits");
-    browser.close();
   }
 
   @Test
-  public void zipCode5DigitsCheck() {
-
-    ChromeOptions options = new ChromeOptions();
-    options.addArguments("start-Maximized");
-    options.addArguments("headless");
-    WebDriver browser = new ChromeDriver();
-    browser.get("https://sharelane.com/cgi-bin/register.py");
-
-    browser.findElement (By.name("zip_code")).sendKeys("12345");
-    browser.findElement(By.xpath("//input[@value='Continue']")).click();
-    boolean isPresent = browser.findElement(By.xpath("//input[@value='Register']")).isDisplayed();
+  public void authorizationIsValid() {
+    browser.get("https://www.saucedemo.com");
+    browser.findElement (By.id("user-name")).sendKeys("standard_user");
+    browser.findElement (By.name("password")).sendKeys("secret_sauce");
+    browser.findElement(By.xpath("//input[@class='submit-button btn_action']")).click();
+    boolean isPresent = browser.findElement(By.cssSelector(".title")).isDisplayed();
     assertTrue(isPresent, "Register button is not displayed");
     browser.close();
   }
 
-
+  @Test
+  public void lockedUser () {
+    browser.get("https://www.saucedemo.com");
+    browser.findElement (By.cssSelector("#user-name")).sendKeys("locked_out_user");
+    browser.findElement (By.cssSelector("#password")).sendKeys("secret_sauce");
+    browser.findElement(By.name("login-button")).click();
+    String errorMessage = browser.findElement(By.xpath("//div[@class='error-message-container error']")).getText();
+    assertEquals(errorMessage, "Epic sadface: Sorry, this user has been locked out.");
+    browser.close();
+  }
 }
